@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "664632715729",
+    "project_id": "sinavim-b3be0",
+    "storage_bucket": "sinavim-b3be0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:664632715729:android:fb77072cfdd00c2317d8f0",
+        "android_client_info": {
+          "package_name": "com.sinavim.sinavim_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "664632715729-spctk2maci16mmi1gsnjlqn27ghqn58k.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sinavim.sinavim_app",
+            "certificate_hash": "586f481bf1552ff550c2b8c395d2cb5897d5c0cf"
+          }
+        },
+        {
+          "client_id": "664632715729-7709bdibr7eur0n5outovjsdh4hk30s3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDtjFpzhZJh956lEduisPEPnLMXF534JGE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "664632715729-7709bdibr7eur0n5outovjsdh4hk30s3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
