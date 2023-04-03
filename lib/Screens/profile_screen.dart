@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -126,7 +125,13 @@ class _ProfileScreenState extends State<ProfileScreen>
                           userData['uid'] ==
                               "qbfFV5XOQaY6VIuuOAxz1Mfn7rs2" || // Leyla
                           userData['uid'] ==
-                              "FXRLWXHsGbOeuhJmTxMnscuUFtv1" //sınavım
+                              "FXRLWXHsGbOeuhJmTxMnscuUFtv1" || //sınavım
+                          userData['uid'] ==
+                              "QBaTtUbO1Bc4Qd9CsX7k21R0fS13" || //Ayşegül
+                          userData['uid'] ==
+                              "DXvNmVUyHigemLYRQtx5JZq4SCq2" || // bilimsel çocuk
+                          userData['uid'] ==
+                              "bB0OYUKpuQhPw8BNOQWIhoiziE12" //nimet
                       ? const CircleAvatar(
                           backgroundImage:
                               AssetImage('assets/images/crown.png'),
@@ -213,46 +218,49 @@ class _ProfileScreenState extends State<ProfileScreen>
                                     ),
                                   ],
                                 ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    FirebaseAuth.instance.currentUser!.uid ==
-                                            widget.uid
-                                        ? Container()
-                                        : isFollowing
-                                            ? FollowButtonCard(
-                                                title: 'Takipten Çık',
-                                                onPressed: () async {
-                                                  await FireStoreMethods()
-                                                      .followUser(
-                                                    FirebaseAuth.instance
-                                                        .currentUser!.uid,
-                                                    userData['uid'],
-                                                  );
-                                                  setState(() {
-                                                    isFollowing = false;
-                                                    followers--;
-                                                  });
-                                                })
-                                            : FollowButtonCard(
-                                                title: 'Takip Et',
-                                                onPressed: () async {
-                                                  await FireStoreMethods()
-                                                      .followUser(
-                                                    FirebaseAuth.instance
-                                                        .currentUser!.uid,
-                                                    userData['uid'],
-                                                  );
+                                user.uid == "OpcgCbxGIjZyHYt0MVn71c505E42"
+                                    ? Container()
+                                    : Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          FirebaseAuth.instance.currentUser!
+                                                      .uid ==
+                                                  widget.uid
+                                              ? Container()
+                                              : isFollowing
+                                                  ? FollowButtonCard(
+                                                      title: 'Takipten Çık',
+                                                      onPressed: () async {
+                                                        await FireStoreMethods()
+                                                            .followUser(
+                                                          FirebaseAuth.instance
+                                                              .currentUser!.uid,
+                                                          userData['uid'],
+                                                        );
+                                                        setState(() {
+                                                          isFollowing = false;
+                                                          followers--;
+                                                        });
+                                                      })
+                                                  : FollowButtonCard(
+                                                      title: 'Takip Et',
+                                                      onPressed: () async {
+                                                        await FireStoreMethods()
+                                                            .followUser(
+                                                          FirebaseAuth.instance
+                                                              .currentUser!.uid,
+                                                          userData['uid'],
+                                                        );
 
-                                                  setState(() {
-                                                    isFollowing = true;
-                                                    followers++;
-                                                  });
-                                                },
-                                              ),
-                                  ],
-                                ),
+                                                        setState(() {
+                                                          isFollowing = true;
+                                                          followers++;
+                                                        });
+                                                      },
+                                                    ),
+                                        ],
+                                      ),
                               ],
                             ),
                           ),
@@ -296,108 +304,59 @@ class _ProfileScreenState extends State<ProfileScreen>
                 ),
               ),
             ),
-            body: user.engelkontrol == "false"
-                ? DefaultTabController(
-                    initialIndex: 0,
-                    length: 2,
-                    child: Scaffold(
-                      appBar: AppBar(
-                        title: Text(
-                          'Gönderiler',
-                          style: Theme.of(context).textTheme.headline6,
-                        ),
-                        centerTitle: true,
-                        leading: Container(),
-                        elevation: 0,
-                        bottom: const TabBar(
-                          tabs: [
-                            Tab(
-                              icon: Icon(
-                                Icons.apps_rounded,
-                                color: Colors.teal,
-                              ),
-                            ),
-                            Tab(
-                              icon: Icon(
-                                Icons.article_rounded,
-                                color: Colors.teal,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      body: TabBarView(
-                        children: [
-                          postsPic(),
-                          postsText(),
-                        ],
-                      ),
+            body: user.uid == "OpcgCbxGIjZyHYt0MVn71c505E42"
+                ? Center(
+                    child: Text(
+                      'Çoğu Özellik Misafir Hesabı Olduğu İçin Kısıtlıdır. Lütfen Çıkış Yapıp Ardından Hesap Oluşturunuz.',
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.sourceSansPro(fontSize: 18),
                     ),
                   )
-                : Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset(
-                        'assets/images/Oh no-amico.png',
-                        width: double.infinity,
-                        height: 300,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          '${user.username} Hesabınız Kurallara Uymadığınız Geçici Süreliğine Engellendi. Engel Sebebini Öğrenmek İçin İletişime Geçebilirsiniz.',
-                          style: GoogleFonts.openSans(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w700,
-                            wordSpacing: 1,
-                            letterSpacing: 1,
+                : user.engelkontrol == "false"
+                    ? posts()
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            'assets/images/Oh no-amico.png',
+                            width: double.infinity,
+                            height: 300,
                           ),
-                          textAlign: TextAlign.center,
-                        ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              '${user.username} Hesabınız Kurallara Uymadığınız Geçici Süreliğine Engellendi. Engel Sebebini Öğrenmek İçin İletişime Geçebilirsiniz.',
+                              style: GoogleFonts.openSans(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700,
+                                wordSpacing: 1,
+                                letterSpacing: 1,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          FollowButtonCard(
+                            title: "İletişime Geç",
+                            onPressed: () =>
+                                Navigator.pushNamed(context, '/feedback-card'),
+                          ),
+                        ],
                       ),
-                      FollowButtonCard(
-                        title: "İletişime Geç",
-                        onPressed: () =>
-                            Navigator.pushNamed(context, '/feedback-card'),
-                      ),
-                    ],
-                  ),
             floatingActionButton: userData['uid'] == user.uid
-                ? SpeedDial(
+                ? FloatingActionButton(
                     backgroundColor: const Color(0xffd94555),
-                    icon: Icons.menu,
-                    iconTheme: const IconThemeData(color: Colors.white),
-                    activeIcon: Icons.close,
-                    spacing: 30,
-                    childPadding: const EdgeInsets.all(5),
-                    buttonSize: const Size.fromRadius(28),
-                    spaceBetweenChildren: 4,
-                    childrenButtonSize: const Size.fromRadius(28),
-                    visible: true,
-                    direction: SpeedDialDirection.up,
-                    useRotationAnimation: true,
-                    elevation: 0.1,
-                    animationCurve: Curves.elasticInOut,
-                    isOpenOnStart: false,
-                    animationDuration: const Duration(milliseconds: 300),
-                    children: [
-                      SpeedDialChild(
-                        child: !rmIcons ? const Icon(Icons.settings) : null,
-                        backgroundColor: const Color(0xff801818),
-                        foregroundColor: Colors.white,
-                        onTap: editProfill,
-                        label: 'Ayarlar',
-                        labelStyle:
-                            const TextStyle(fontWeight: FontWeight.w600),
-                      ),
-                    ],
+                    onPressed: editProfill,
+                    child: const Icon(
+                      Icons.settings,
+                      color: Colors.white,
+                    ),
                   )
                 : Container(),
           );
   }
 
-  StreamBuilder<QuerySnapshot<Map<String, dynamic>>> postsPic() {
+  StreamBuilder<QuerySnapshot<Map<String, dynamic>>> posts() {
     return StreamBuilder(
       stream: FirebaseFirestore.instance
           .collection('posts')
@@ -421,45 +380,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                 ? PostCard(
                     snap: snapshot.data!.docs[index].data(),
                   )
-                : Container();
-            // : PostCardText(
-            //     snap: snapshot.data!.docs[index].data(),
-            //   );
-          },
-        );
-      },
-    );
-  }
-
-  StreamBuilder<QuerySnapshot<Map<String, dynamic>>> postsText() {
-    return StreamBuilder(
-      stream: FirebaseFirestore.instance
-          .collection('posts')
-          .where('uid', isEqualTo: widget.uid)
-          .orderBy('datePublished', descending: true)
-          .snapshots(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-            child: SpinKitCircle(
-              color: Colors.green,
-            ),
-          );
-        }
-        return ListView.builder(
-          controller: scrollController,
-          shrinkWrap: true,
-          itemCount: snapshot.data!.docs.length,
-          itemBuilder: (context, index) {
-            return snapshot.data!.docs[index].data()["postUrl"] == ""
-                ? PostCardText(
+                : PostCardText(
                     snap: snapshot.data!.docs[index].data(),
-                  )
-                : Container();
-
-            // : PostCardText(
-            //     snap: snapshot.data!.docs[index].data(),
-            //   );
+                  );
           },
         );
       },

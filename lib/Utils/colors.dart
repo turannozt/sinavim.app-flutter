@@ -14,3 +14,5 @@ const blueColorLight = Color.fromRGBO(0, 149, 246, 1);
 const primaryColorLight = Color(0xff783838);
 const secondaryColorLight = Color.fromARGB(255, 255, 184, 77);
 const blackColorLight = Colors.black87;
+
+const kPrimaryColor = Color(0xFFFF7643);

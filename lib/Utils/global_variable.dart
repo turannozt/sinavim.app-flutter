@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:sinavim_app/Screens/feed_screen.dart';
 import 'package:sinavim_app/Screens/mentor_screen.dart';
 import 'package:sinavim_app/Screens/profile_screen.dart';
-import 'package:sinavim_app/Screens/search_screen.dart';
+import 'package:sinavim_app/Education%20Screens/questions_screen.dart';
 
 List<Widget> homeScreenItems = [
   const FeedScreen(),
-  const SearchScreen(),
+  const QuestionsScreen(),
   // const HaberlerAdminPage(),
   const MentorScreen(),
   ProfileScreen(
@@ -26,4 +26,12 @@ final List<String> items = [
   'Soru',
   'Rekor Bende',
   'Ne Kadar Çalıştım'
+];
+
+final List<String> questionItems = [
+  'Matematik',
+  'Türkçe/Dil Bilgisi',
+  'İngilizce',
+  'F-K-B',
+  'Sosyal',
 ];

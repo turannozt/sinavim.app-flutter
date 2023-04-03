@@ -58,7 +58,7 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
           ),
           BottomNavigationBarItem(
               icon: Icon(
-                CupertinoIcons.search,
+                CupertinoIcons.question_square_fill,
                 color: (_page == 1) ? Colors.pink : Colors.blueGrey,
               ),
               backgroundColor: primaryColor),

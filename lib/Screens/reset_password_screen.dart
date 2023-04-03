@@ -96,20 +96,18 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
       resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
           width: double.infinity,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Flexible(
-                flex: 1,
-                child: Container(),
-              ),
+              const SizedBox(height: 10),
               Center(
                 child: SvgPicture.asset(
                   'assets/images/sinavim.svg',
                   color: const Color(0xffd94555),
-                  height: 55,
+                  height: 48,
                 ),
               ),
               Center(
@@ -117,7 +115,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   fit: BoxFit.contain,
                   'assets/images/Reset password-amico.png',
                   width: MediaQuery.of(context).size.width,
-                  height: 200,
+                  height: 170,
                 ),
               ),
               const SizedBox(height: 24),
@@ -168,11 +166,11 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     color: Color(0xffd94555),
                   ),
                   child: !_isLoading
-                      ? const Text(
+                      ? Text(
                           'Gönder',
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500,
+                          style: GoogleFonts.sourceSansPro(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
                             color: Colors.white,
                           ),
                         )
@@ -182,7 +180,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 ),
               ),
               const SizedBox(height: 12),
-              Flexible(flex: 2, child: Container()),
+
               //Açıklamalar Giriş Yap
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -215,6 +213,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   ),
                 ],
               ),
+              Flexible(child: Container()),
             ],
           ),
         ),

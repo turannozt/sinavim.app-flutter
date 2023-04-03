@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 
 class FeedbackPage extends StatefulWidget {
   const FeedbackPage({Key? key}) : super(key: key);
@@ -9,7 +8,7 @@ class FeedbackPage extends StatefulWidget {
 }
 
 class _FeedbackPageState extends State<FeedbackPage> {
-  late WebViewController controller;
+ // late WebViewController controller;
 
   @override
   Widget build(BuildContext context) {
@@ -27,17 +26,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
             },
             icon: const Icon(Icons.arrow_back_ios_new)),
       ),
-      body: WebView(
-        javascriptMode: JavascriptMode.unrestricted,
-        initialUrl:
-            'https://docs.google.com/forms/d/e/1FAIpQLSenWiRikytPQmPpMiG3_hPSiInhd6ZKO6zG1JF0JbuBULswfQ/viewform?usp=sf_link',
-        onWebViewCreated: (controller) {
-          this.controller = controller;
-        },
-        onPageStarted: (url) {
-          debugPrint('new Website: $url');
-        },
-      ),
+    
     );
   }
 }

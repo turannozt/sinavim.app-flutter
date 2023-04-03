@@ -377,6 +377,15 @@ class FireStoreMethods {
             await mentorPostsCollectionRef.where('uid', isEqualTo: uid).get();
         for (var element in mentorCollection.docs) {
           batch.update(element.reference, {'username': newUsername});
+
+          CollectionReference questionsPostsCollectionRef =
+              _firestore.collection('Questions');
+          var questionCollection = await questionsPostsCollectionRef
+              .where('uid', isEqualTo: uid)
+              .get();
+          for (var element in questionCollection.docs) {
+            batch.update(element.reference, {'username': newUsername});
+          }
         }
         batch.commit();
       }
@@ -438,17 +447,6 @@ class FireStoreMethods {
         batch.update(element.reference, {'profImage': profImage});
       }
 
-      CollectionReference ref = _firestore.collection('posts');
-      CollectionReference postsCommentsCollectionRef =
-          _firestore.collection('comments');
-
-      postsCommentsCollectionRef = ref;
-      var postsCommentsCollection =
-          await postsCommentsCollectionRef.where('uid', isEqualTo: uid).get();
-      for (var element in postsCommentsCollection.docs) {
-        batch.update(element.reference, {'profImage': profImage});
-      }
-
       CollectionReference mentorPostsCollectionRef =
           _firestore.collection('MentorPosts');
       var mentorCollection =
@@ -457,10 +455,18 @@ class FireStoreMethods {
         batch.update(element.reference, {'profImage': profImage});
       }
 
+      CollectionReference questionsPostsCollectionRef =
+          _firestore.collection('Questions');
+      var questionCollection =
+          await questionsPostsCollectionRef.where('uid', isEqualTo: uid).get();
+      for (var element in questionCollection.docs) {
+        batch.update(element.reference, {'profImage': profImage});
+      }
       batch.commit();
     } catch (e) {
       debugPrint(e.toString());
     }
+    
   }
 
 //YORUM SİL
@@ -565,6 +571,7 @@ class FireStoreMethods {
     return res;
   }
 
+//bildirim kaydet
   Future<String> notificationsCollection(
     String notiUid,
     String notiUsername,
@@ -589,6 +596,7 @@ class FireStoreMethods {
     return res;
   }
 
+// token güncelle
   Future<String> tokenUpdate(String userId, String newToken) async {
     String res = "error";
     try {
@@ -614,6 +622,15 @@ class FireStoreMethods {
         batch.update(element.reference, {'token': newToken});
       }
 
+      CollectionReference questionPostsCollectionRef =
+          _firestore.collection('Questions');
+      var quesitonPostsCollection = await questionPostsCollectionRef
+          .where('uid', isEqualTo: userId)
+          .get();
+      for (var element in quesitonPostsCollection.docs) {
+        batch.update(element.reference, {'token': newToken});
+      }
+
       batch.commit();
       res = "success";
     } catch (e) {
@@ -622,29 +639,9 @@ class FireStoreMethods {
     return res;
   }
 
-  Future<String> commetUpdateUsername(
-    String postId,
-    String commentId,
-    String newUsername,
+  void deleteNoti(
+    String uid,
   ) async {
-    String res = "error";
-    try {
-      await _firestore
-          .collection('posts')
-          .doc(postId)
-          .collection('comments')
-          .doc(commentId)
-          .update({
-        'name': newUsername,
-      });
-      res = "success";
-    } catch (e) {
-      debugPrint(e.toString());
-    }
-    return res;
-  }
-
-  void deleteNoti(String uid,) async {
     try {
       WriteBatch batch = _firestore.batch();
       CollectionReference postsCollectionRef =
@@ -658,5 +655,15 @@ class FireStoreMethods {
     } catch (e) {
       debugPrint(e.toString());
     }
+  }
+
+  addData() async {
+    WriteBatch batch = _firestore.batch();
+    CollectionReference postsRef = _firestore.collection('posts');
+    var counterDocs = await postsRef.get();
+    for (var element in counterDocs.docs) {
+      batch.update(element.reference, {'savedControl': false});
+    }
+    batch.commit();
   }
 }

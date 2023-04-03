@@ -1,11 +1,9 @@
 import 'dart:async';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:sinavim_app/Responsive/mobile_screen_layout.dart';
 import 'package:sinavim_app/Responsive/responsive_layout.dart';
 import 'package:sinavim_app/Responsive/web_screen_layout.dart';
-import 'package:sinavim_app/Widgets/confetti_card.dart';
 
 class VerifyEmailPage extends StatefulWidget {
   const VerifyEmailPage({Key? key}) : super(key: key);
@@ -62,12 +60,10 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
 
   @override
   Widget build(BuildContext context) => isEmailVerified
-      ? const AllConfettiWidget(
-          child: ResponsiveLayout(
-            mobileScreenLayout: MobileScreenLayout(),
-            webScreenLayout: WebScreenLayout(),
-          ),
-        )
+      ? const ResponsiveLayout(
+        mobileScreenLayout: MobileScreenLayout(),
+        webScreenLayout: WebScreenLayout(),
+      )
       : Scaffold(
           appBar: AppBar(
             elevation: 1,

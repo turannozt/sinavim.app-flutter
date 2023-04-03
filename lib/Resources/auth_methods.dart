@@ -109,7 +109,7 @@ class AuthMethods {
       debugPrint('Güncellemek İstemiyor Demekki Aga Zorlama');
     }
   }
-
+// reset password
   Future<String> resetPassword(String email) async {
     String res = "error";
     try {

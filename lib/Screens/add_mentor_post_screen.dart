@@ -25,7 +25,7 @@ class AddMentorPost extends StatefulWidget {
 class _AddMentorPostState extends State<AddMentorPost> {
   RewardedAd? _rewardedAd;
   int _rewardedAdScore = 0;
-  BannerAd? _banner;
+
   Uint8List? _file;
   bool isLoading = false;
   String? selectedValue;
@@ -100,13 +100,12 @@ class _AddMentorPostState extends State<AddMentorPost> {
     super.initState();
     //Reklamları Ekrana Yükledik
     _createRewardedAd();
-    _createBannerAd();
   }
 
 //Reklam Alanı-------------------------
   void _createRewardedAd() {
     RewardedAd.load(
-      adUnitId: AdmobService.rewardedAdUnitedIdMentorGonderiAttiginda!,
+      adUnitId: AdmobService.rewardedAdUnitedIdKullaniciFotografliGonderiAttiginda!,
       request: const AdRequest(),
       rewardedAdLoadCallback: RewardedAdLoadCallback(
         onAdLoaded: (ad) => setState(() => _rewardedAd = ad),
@@ -131,15 +130,6 @@ class _AddMentorPostState extends State<AddMentorPost> {
         onUserEarnedReward: (ad, reward) => setState(() => _rewardedAdScore++),
       );
     }
-  }
-
-  void _createBannerAd() {
-    _banner = BannerAd(
-      size: AdSize.fullBanner,
-      adUnitId: AdmobService.bannnerAdUnitedGonderiOlusturmaEkranlariAltinda!,
-      listener: AdmobService.bannerAdListener,
-      request: const AdRequest(),
-    )..load();
   }
 
 //Reklam Alanı-------------------------
@@ -287,14 +277,6 @@ class _AddMentorPostState extends State<AddMentorPost> {
                 ),
               ],
             ),
-            bottomNavigationBar: _banner == null
-                ? Container()
-                : Container(
-                    padding: const EdgeInsets.only(bottom: 4),
-                    width: double.infinity,
-                    height: 52,
-                    child: AdWidget(ad: _banner!),
-                  ),
           );
   }
 

@@ -1,10 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:sinavim_app/Widgets/post_card.dart';
 import 'package:sinavim_app/Widgets/post_text_card.dart';
-import 'package:sinavim_app/services/add_mob_service.dart';
 
 class SavedPosts extends StatefulWidget {
   final String uid;
@@ -15,7 +13,6 @@ class SavedPosts extends StatefulWidget {
 }
 
 class _SavedPostsState extends State<SavedPosts> {
-  BannerAd? _banner;
   Future<void> _handleRefresh() async {
     return await Future.delayed(
       const Duration(seconds: 2),
@@ -28,16 +25,6 @@ class _SavedPostsState extends State<SavedPosts> {
   @override
   void initState() {
     super.initState();
-    _createBannerAd();
-  }
-
-  void _createBannerAd() {
-    _banner = BannerAd(
-      size: AdSize.fullBanner,
-      adUnitId: AdmobService.bannnerAdUnitedGonderiOlusturmaEkranlariAltinda!,
-      listener: AdmobService.bannerAdListener,
-      request: const AdRequest(),
-    )..load();
   }
 
   @override
@@ -99,14 +86,6 @@ class _SavedPostsState extends State<SavedPosts> {
           );
         },
       ),
-      bottomNavigationBar: _banner == null
-          ? Container()
-          : Container(
-              padding: const EdgeInsets.only(bottom: 4),
-              width: double.infinity,
-              height: 52,
-              child: AdWidget(ad: _banner!),
-            ),
     );
   }
 }

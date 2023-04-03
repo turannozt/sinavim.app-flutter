@@ -1,8 +1,11 @@
+// ignore_for_file: prefer_typing_uninitialized_variables
+
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 
 class AnimationTextHeadFeed extends StatefulWidget {
-  const AnimationTextHeadFeed({Key? key}) : super(key: key);
+  final title;
+  const AnimationTextHeadFeed({Key? key, this.title}) : super(key: key);
   @override
   State<AnimationTextHeadFeed> createState() => _AnimationTextHeadFeedState();
 }
@@ -24,11 +27,10 @@ class _AnimationTextHeadFeedState extends State<AnimationTextHeadFeed> {
     );
 
     return SizedBox(
-      width: 280.0,
       child: AnimatedTextKit(
         animatedTexts: [
           ColorizeAnimatedText(
-            'SINAVIM',
+            widget.title,
             textStyle: colorizeTextStyle,
             colors: colorizeColors,
           ),

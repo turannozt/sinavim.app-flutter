@@ -34,7 +34,7 @@ class _CommentCardState extends State<CommentCard> {
     String dataNotifications = '{ "to" : "$token",'
         ' "notification" : {'
         ' "title":"$title",'
-        '"body":"$body"'
+        '"body":"$body",'
         ' }'
         ' }';
 
@@ -52,13 +52,10 @@ class _CommentCardState extends State<CommentCard> {
   @override
   void initState() {
     super.initState();
-    updateComment();
+
   }
 
-  updateComment() async {
-    await FireStoreMethods().commetUpdateUsername(
-        widget.postId, widget.snap.data()['commentId'], username!);
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -81,44 +78,45 @@ class _CommentCardState extends State<CommentCard> {
 
     Future<void> _showChoiseDialog() {
       return showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: const Text(
-                  'Yorumunuzu silmek isetediğinizden emin misiniz ?'),
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(10),
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title:
+                const Text('Yorumunuzu silmek isetediğinizden emin misiniz ?'),
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(10),
+              ),
+            ),
+            content: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                InkWell(
+                  onTap: () {
+                    FireStoreMethods().deleteComment(
+                        widget.postId, widget.snap.data()['commentId']);
+                    Navigator.pop(context);
+                    Fluttertoast.showToast(
+                      msg: "Yorumunuz Silinmiştir.",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: const Color(0xffd94555),
+                      textColor: Colors.white,
+                      fontSize: 14,
+                    );
+                  },
+                  child: const Text('Evet'),
                 ),
-              ),
-              content: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  InkWell(
-                    onTap: () {
-                      FireStoreMethods().deleteComment(
-                          widget.postId, widget.snap.data()['commentId']);
-                      Navigator.pop(context);
-                      Fluttertoast.showToast(
-                        msg: "Yorumunuz Silinmiştir.",
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.BOTTOM,
-                        timeInSecForIosWeb: 1,
-                        backgroundColor: const Color(0xffd94555),
-                        textColor: Colors.white,
-                        fontSize: 14,
-                      );
-                    },
-                    child: const Text('Evet'),
-                  ),
-                  InkWell(
-                    onTap: () => Navigator.pop(context),
-                    child: const Text('Hayır'),
-                  ),
-                ],
-              ),
-            );
-          });
+                InkWell(
+                  onTap: () => Navigator.pop(context),
+                  child: const Text('Hayır'),
+                ),
+              ],
+            ),
+          );
+        },
+      );
     }
 
     final model.User user = Provider.of<UserProvider>(context).getUser;
@@ -191,6 +189,15 @@ class _CommentCardState extends State<CommentCard> {
                                   title: 'Yorumuna Yanıt Veren Birileri Var !',
                                   body:
                                       '${widget.snap.data()['text']} İçerkli Yorumuna Bir Yanıt Verdi',
+                                );
+                                Fluttertoast.showToast(
+                                  msg: "Kullanıcı Yorumunuzdan Haberdar Oldu !",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.BOTTOM,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor: const Color(0xffd94555),
+                                  textColor: Colors.white,
+                                  fontSize: 14,
                                 );
                               }
                             },

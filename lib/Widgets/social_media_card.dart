@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use, avoid_print
+// ignore_for_file: deprecated_member_use, avoid_print, depend_on_referenced_packages
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +7,6 @@ import 'package:url_launcher/url_launcher.dart';
 
 class SocialMediaCard extends StatefulWidget {
   const SocialMediaCard({super.key});
-
   @override
   State<SocialMediaCard> createState() => _SocialMediaCardState();
 }
@@ -45,7 +44,7 @@ class _SocialMediaCardState extends State<SocialMediaCard> {
                         iconColor: Colors.pink,
                         link: 'https://www.instagram.com/turannozt/',
                         placeholderStyle:
-                            const TextStyle(color: Colors.black, fontSize: 20),
+                            const TextStyle(color: Colors.black, fontSize: 18),
                       ),
                       const SizedBox(height: 5),
                       SocialWidget(
@@ -54,7 +53,7 @@ class _SocialMediaCardState extends State<SocialMediaCard> {
                         link: 'https://www.instagram.com/sinavim.app/',
                         iconColor: Colors.purple,
                         placeholderStyle:
-                            const TextStyle(color: Colors.black, fontSize: 20),
+                            const TextStyle(color: Colors.black, fontSize: 18),
                       ),
                       const SizedBox(height: 5),
                       SocialWidget(
@@ -64,7 +63,7 @@ class _SocialMediaCardState extends State<SocialMediaCard> {
                         link:
                             'https://www.youtube.com/channel/UCyj2bxFxNxoLweqYqwpYIIA',
                         placeholderStyle:
-                            const TextStyle(color: Colors.black, fontSize: 20),
+                            const TextStyle(color: Colors.black, fontSize: 18),
                       ),
                       const SizedBox(height: 5),
                       SocialWidget(
@@ -74,7 +73,7 @@ class _SocialMediaCardState extends State<SocialMediaCard> {
                             'https://www.linkedin.com/in/turan-öztürk-744bb3219/',
                         iconColor: Colors.blueGrey,
                         placeholderStyle:
-                            const TextStyle(color: Colors.black, fontSize: 20),
+                            const TextStyle(color: Colors.black, fontSize: 18),
                       ),
                       const SizedBox(height: 10),
                       SocialWidget(
@@ -83,7 +82,7 @@ class _SocialMediaCardState extends State<SocialMediaCard> {
                         link: '',
                         iconColor: Colors.blueAccent,
                         placeholderStyle:
-                            const TextStyle(color: Colors.black, fontSize: 20),
+                            const TextStyle(color: Colors.black, fontSize: 18),
                       ),
                     ],
                   ),
@@ -102,7 +101,7 @@ class _SocialMediaCardState extends State<SocialMediaCard> {
                         'https://www.youtube.com/channel/UCyj2bxFxNxoLweqYqwpYIIA',
                     iconSize: 20,
                     placeholderStyle:
-                        const TextStyle(fontSize: 14, color: Colors.grey),
+                        const TextStyle(fontSize: 15, color: Colors.grey),
                   ),
                   SocialWidget(
                     placeholderText: '/Turan ÖZTÜRK',
@@ -110,7 +109,7 @@ class _SocialMediaCardState extends State<SocialMediaCard> {
                     link: 'https://www.linkedin.com/in/turan-öztürk-744bb3219/',
                     iconSize: 20,
                     placeholderStyle:
-                        const TextStyle(fontSize: 14, color: Colors.grey),
+                        const TextStyle(fontSize: 15, color: Colors.grey),
                   ),
                 ],
               ),

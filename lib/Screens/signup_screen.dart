@@ -195,14 +195,14 @@ class _SignupScreenState extends State<SignupScreen> {
                     child: SvgPicture.asset(
                       'assets/images/sinavim.svg',
                       color: const Color(0xffd94555),
-                      height: 55,
+                      height: 48,
                     ),
                   ),
                   Center(
                     child: Image.asset(
                       'assets/images/Sign up-amico.png',
                       width: MediaQuery.of(context).size.width,
-                      height: 200,
+                      height: 180,
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -266,11 +266,11 @@ class _SignupScreenState extends State<SignupScreen> {
                         color: Color(0xffd94555),
                       ),
                       child: !_isLoading
-                          ? const Text(
+                          ? Text(
                               'Kayıt Ol',
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w500,
+                              style: GoogleFonts.sourceSansPro(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
                                 color: Colors.white,
                               ),
                             )
@@ -279,7 +279,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             ),
                     ),
                   ),
-                  const SizedBox(height: 40),
+                  const SizedBox(height: 10),
                   //Açıklamalar Giriş Yap
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,

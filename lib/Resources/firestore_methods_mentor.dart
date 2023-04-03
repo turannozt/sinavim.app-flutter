@@ -9,6 +9,7 @@ import 'package:uuid/uuid.dart';
 class FireStoreMethodsMentor {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 // upload mentor post
+  // ignore: sdk_version_async_exported_from_core
   Future<String> uploadPost(String description, Uint8List file, String uid,
       String username, String profImage, String tag, String token) async {
     // asking uid here because we dont want to make extra calls to firebase auth when we can just get from our state management

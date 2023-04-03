@@ -208,15 +208,25 @@ class _CommentCardTextState extends State<CommentCardText> {
                             onTap: () {},
                             child: GestureDetector(
                               onTap: () async {
-                                user.uid != widget.snap.data()['uid']
-                                    ? await pushNotificationsSpecificDevice(
-                                        token: widget.snap.data()['token'],
-                                        title:
-                                            'Yorumuna Yanıt Veren Birileri Var !',
-                                        body:
-                                            '${widget.snap.data()['text']} İçerkli Yorumuna Bir Yanıt Var',
-                                      )
-                                    : null;
+                                if (user.uid != widget.snap.data()['uid']) {
+                                  await pushNotificationsSpecificDevice(
+                                    token: widget.snap.data()['token'],
+                                    title:
+                                        'Yorumuna Yanıt Veren Birileri Var !',
+                                    body:
+                                        '${widget.snap.data()['text']} İçerkli Yorumuna Bir Yanıt Var',
+                                  );
+                                  Fluttertoast.showToast(
+                                    msg:
+                                        "Kullanıcı Yorumunuzdan Haberdar Oldu !",
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.BOTTOM,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor: const Color(0xffd94555),
+                                    textColor: Colors.white,
+                                    fontSize: 14,
+                                  );
+                                }
                               },
                               child: const Text(
                                 'Yanıtla',

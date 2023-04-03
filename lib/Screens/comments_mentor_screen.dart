@@ -34,11 +34,11 @@ class _CommentsMentorScreenState extends State<CommentsMentorScreen> {
     return await FirebaseMessaging.instance.getToken() ?? "";
   }
 
-  Future<bool> pushNotificationsSpecificDevice({
-    required String token,
-    required String title,
-    required String body,
-  }) async {
+  Future<bool> pushNotificationsSpecificDevice(
+      {required String token,
+      required String title,
+      required String body,
+      required String page}) async {
     String dataNotifications = '{ "to" : "$token",'
         ' "notification" : {'
         ' "title":"$title",'
@@ -132,8 +132,8 @@ class _CommentsMentorScreenState extends State<CommentsMentorScreen> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
               child: SpinKitCircle(
-              color: Colors.green,
-            ),
+                color: Colors.green,
+              ),
             );
           }
           return RefreshIndicator(
@@ -156,66 +156,70 @@ class _CommentsMentorScreenState extends State<CommentsMentorScreen> {
           margin:
               EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           padding: const EdgeInsets.only(left: 16, right: 8),
-          child: Row(
-            children: [
-              CircleAvatar(
-                backgroundImage: NetworkImage(user.profImage),
-                radius: 18,
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 16, right: 8),
-                  child: TextField(
-                    autocorrect: true,
-                    controller: commentEditingController,
-                    decoration: InputDecoration(
-                      labelText: 'Metin Giriniz',
-                      labelStyle: const TextStyle(
-                        fontWeight: FontWeight.w500,
-                        wordSpacing: 1,
-                        letterSpacing: 1,
-                      ),
-                      hintText: 'Yorum Yapan ${user.username}',
-                      border: InputBorder.none,
+          child: user.uid == "OpcgCbxGIjZyHYt0MVn71c505E42"
+              ? Container()
+              : Row(
+                  children: [
+                    CircleAvatar(
+                      backgroundImage: NetworkImage(user.profImage),
+                      radius: 18,
                     ),
-                  ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 16, right: 8),
+                        child: TextField(
+                          autocorrect: true,
+                          controller: commentEditingController,
+                          decoration: InputDecoration(
+                            labelText: 'Metin Giriniz',
+                            labelStyle: const TextStyle(
+                              fontWeight: FontWeight.w500,
+                              wordSpacing: 1,
+                              letterSpacing: 1,
+                            ),
+                            hintText: 'Yorum Yapan ${user.username}',
+                            border: InputBorder.none,
+                          ),
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        postComment(
+                          user.uid,
+                          user.username,
+                          user.profImage,
+                        );
+                        if (user.uid != widget.userUid) {
+                          pushNotificationsSpecificDevice(
+                            token: widget.token,
+                            title: '${user.username} Gönderinize Yorum Yaptı',
+                            body:
+                                'Yorum İçeriği : ${commentEditingController.text}',
+                            page: "",
+                          );
+                          FireStoreMethods().notificationsCollection(
+                            widget.userUid,
+                            user.username,
+                            commentEditingController.text,
+                            user.profImage,
+                            DateTime.now(),
+                          );
+                        } else {
+                          null;
+                        }
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 8, horizontal: 8),
+                        child: const Text(
+                          'Gönder',
+                          style: TextStyle(color: Colors.blue),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              InkWell(
-                onTap: () {
-                  postComment(
-                    user.uid,
-                    user.username,
-                    user.profImage,
-                  );
-                  if (user.uid != widget.userUid) {
-                    pushNotificationsSpecificDevice(
-                      token: widget.token,
-                      title: '${user.username} Gönderinize Yorum Yaptı',
-                      body: 'Yorum İçeriği : ${commentEditingController.text}',
-                    );
-                    FireStoreMethods().notificationsCollection(
-                      widget.userUid,
-                      user.username,
-                      commentEditingController.text,
-                      user.profImage,
-                      DateTime.now(),
-                    );
-                  } else {
-                    null;
-                  }
-                },
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-                  child: const Text(
-                    'Gönder',
-                    style: TextStyle(color: Colors.blue),
-                  ),
-                ),
-              ),
-            ],
-          ),
         ),
       ),
     );

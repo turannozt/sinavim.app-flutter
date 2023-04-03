@@ -208,12 +208,7 @@ class _MentorPostCardState extends State<MentorPostCard> {
         likeList.toList().any((element) => element['uid'].contains(user.uid));
     return Container(
       // boundary needed for web
-      decoration: BoxDecoration(
-        border: Border.all(
-          width: 0,
-          color: mobileBackgroundColor,
-        ),
-      ),
+
       padding: const EdgeInsets.symmetric(
         vertical: 8,
       ),
@@ -275,8 +270,13 @@ class _MentorPostCardState extends State<MentorPostCard> {
                         widget.snap['uid'] ==
                             "WlCcEFEEtuVsHLk6BW7iegxdHWY2" || //İrem
                         widget.snap['uid'] ==
-                            "8qv0YXkXVnYjhudfCch3fx1VaGC2" //Asuman
-                            
+                            "8qv0YXkXVnYjhudfCch3fx1VaGC2" || //Asuman
+                        widget.snap['uid'] ==
+                            "QBaTtUbO1Bc4Qd9CsX7k21R0fS13" || //Ayşegül
+                        widget.snap['uid'] ==
+                            "FXRLWXHsGbOeuhJmTxMnscuUFtv1" || //sınavım
+                        widget.snap['uid'] ==
+                            "bB0OYUKpuQhPw8BNOQWIhoiziE12" //nimet
                     ? const CircleAvatar(
                         backgroundImage: AssetImage('assets/images/crown.png'),
                         backgroundColor: Colors.transparent,
@@ -356,7 +356,7 @@ class _MentorPostCardState extends State<MentorPostCard> {
               ),
             ),
             child: SizedBox(
-              height: MediaQuery.of(context).size.height * 0.33,
+              //   height: MediaQuery.of(context).size.height * 0.33,
               width: double.infinity,
               child: Image.network(
                 widget.snap['postUrl'].toString(),
@@ -367,42 +367,58 @@ class _MentorPostCardState extends State<MentorPostCard> {
           // LIKE, COMMENT SECTION OF THE POST
           Row(
             children: <Widget>[
-              LikeAnimation(
-                isAnimating: isLiked,
-                smallLike: true,
-                child: IconButton(
-                    icon: isLiked
-                        ? const Icon(
-                            Icons.favorite,
-                            color: Colors.pink,
-                          )
-                        : const Icon(
-                            Icons.favorite_border,
-                          ),
-                    onPressed: () {
-                      FireStoreMethodsMentor().likePost(
-                        widget.snap['postId'].toString(),
-                        user.uid,
-                        widget.snap['likes'],
-                      );
-                      if (widget.snap['uid'] != user.uid) {
-                        pushNotificationsSpecificDevice(
-                          token: widget.snap['token'],
-                          title: 'Yeni Bir Beğeni !',
-                          body: '${user.username} Gönderinizi Beğendi',
+              user.uid == "OpcgCbxGIjZyHYt0MVn71c505E42"
+                  ? IconButton(
+                      icon: const Icon(Icons.favorite_outline),
+                      onPressed: () {
+                        Fluttertoast.showToast(
+                          msg:
+                              "Misafir Hesabındasınız Lütfen Hesap Oluşturun !",
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          timeInSecForIosWeb: 1,
+                          backgroundColor: const Color(0xffd94555),
+                          textColor: Colors.white,
+                          fontSize: 14,
                         );
-                        FireStoreMethods().notificationsCollection(
-                          widget.snap['uid'],
-                          user.username,
-                          'Gönderinizi Beğendi',
-                          user.profImage,
-                          DateTime.now(),
-                        );
-                      } else {
-                        null;
-                      }
-                    }),
-              ),
+                      },
+                    )
+                  : LikeAnimation(
+                      isAnimating: isLiked,
+                      smallLike: true,
+                      child: IconButton(
+                          icon: isLiked
+                              ? const Icon(
+                                  Icons.favorite,
+                                  color: Colors.pink,
+                                )
+                              : const Icon(
+                                  Icons.favorite_border,
+                                ),
+                          onPressed: () {
+                            FireStoreMethodsMentor().likePost(
+                              widget.snap['postId'].toString(),
+                              user.uid,
+                              widget.snap['likes'],
+                            );
+                            if (widget.snap['uid'] != user.uid) {
+                              pushNotificationsSpecificDevice(
+                                token: widget.snap['token'],
+                                title: 'Yeni Bir Beğeni !',
+                                body: '${user.username} Gönderinizi Beğendi',
+                              );
+                              FireStoreMethods().notificationsCollection(
+                                widget.snap['uid'],
+                                user.username,
+                                'Gönderinizi Beğendi',
+                                user.profImage,
+                                DateTime.now(),
+                              );
+                            } else {
+                              null;
+                            }
+                          }),
+                    ),
               IconButton(
                 icon: const Icon(
                   Icons.comment_outlined,
@@ -538,20 +554,37 @@ class _MentorPostCardState extends State<MentorPostCard> {
                     _showRewardedAd();
                   },
                 ),
-                Container(
-                  padding: const EdgeInsets.symmetric(vertical: 4),
-                  child: Text(
-                    DateFormat.yMMMd()
-                        .format(widget.snap['datePublished'].toDate()),
-                    style: GoogleFonts.openSans(
-                      color: secondaryColor,
-                      fontSize: 13,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(vertical: 4),
+                      child: Text(
+                        DateFormat.yMMMd()
+                            .format(widget.snap['datePublished'].toDate()),
+                        style: GoogleFonts.openSans(
+                          color: secondaryColor,
+                          fontSize: 13,
+                        ),
+                      ),
                     ),
-                  ),
+                    widget.snap['tag'] == "null"
+                        ? Container()
+                        : Text(
+                            '#${widget.snap["tag"]}',
+                            style: GoogleFonts.openSans(
+                              fontSize: 14,
+                              color: Colors.green[800],
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 1,
+                            ),
+                          ),
+                  ],
                 ),
               ],
             ),
           ),
+          const Divider(thickness: 1),
         ],
       ),
     );

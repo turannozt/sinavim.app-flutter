@@ -15,7 +15,7 @@ import 'package:http/http.dart' as http;
 class CommentsScreen extends StatefulWidget {
   final String userUid;
   final String token;
-  final String postId;
+  final String postId; 
   const CommentsScreen(
       {Key? key,
       required this.postId,
@@ -81,7 +81,6 @@ class _CommentsScreenState extends State<CommentsScreen> {
         setState(() {});
       },
     );
-    
   }
 
   Future<bool> pushNotificationsSpecificDevice({
@@ -159,77 +158,80 @@ class _CommentsScreenState extends State<CommentsScreen> {
           margin:
               EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           padding: const EdgeInsets.only(left: 16, right: 8),
-          child: Row(
-            children: [
-              InkWell(
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: ((context) => ProfileScreen(uid: user.uid)),
-                  ),
-                ),
-                child: CircleAvatar(
-                  backgroundImage: NetworkImage(user.profImage),
-                  radius: 18,
-                ),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 16, right: 8),
-                  child: TextField(
-                    keyboardType: TextInputType.text,
-                    autocorrect: true,
-                    controller: commentEditingController,
-                    decoration: InputDecoration(
-                      labelText: 'Metin Giriniz',
-                      labelStyle: const TextStyle(
-                        fontWeight: FontWeight.w500,
-                        wordSpacing: 1,
-                        letterSpacing: 1,
+          child: user.uid == "OpcgCbxGIjZyHYt0MVn71c505E42"
+              ? Container()
+              : Row(
+                  children: [
+                    InkWell(
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: ((context) => ProfileScreen(uid: user.uid)),
+                        ),
                       ),
-                      hintText: 'Yorum Yapan ${user.username}',
-                      border: InputBorder.none,
+                      child: CircleAvatar(
+                        backgroundImage: NetworkImage(user.profImage),
+                        radius: 18,
+                      ),
                     ),
-                  ),
-                ),
-              ),
-              InkWell(
-                onTap: () {
-                  postComment(
-                    user.uid,
-                    user.username,
-                    user.profImage,
-                  );
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 16, right: 8),
+                        child: TextField(
+                          keyboardType: TextInputType.text,
+                          autocorrect: true,
+                          controller: commentEditingController,
+                          decoration: InputDecoration(
+                            labelText: 'Metin Giriniz',
+                            labelStyle: const TextStyle(
+                              fontWeight: FontWeight.w500,
+                              wordSpacing: 1,
+                              letterSpacing: 1,
+                            ),
+                            hintText: 'Yorum Yapan ${user.username}',
+                            border: InputBorder.none,
+                          ),
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        postComment(
+                          user.uid,
+                          user.username,
+                          user.profImage,
+                        );
 
-                  if (user.uid != widget.userUid) {
-                    pushNotificationsSpecificDevice(
-                      token: widget.token,
-                      title: '${user.username} Gönderinize Yorum Yaptı',
-                      body: 'Yorum İçeriği : ${commentEditingController.text}',
-                    );
-                    FireStoreMethods().notificationsCollection(
-                      widget.userUid,
-                      user.username,
-                      commentEditingController.text,
-                      user.profImage,
-                      DateTime.now(),
-                    );
-                  } else {
-                    null;
-                  }
-                },
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-                  child: const Text(
-                    'Gönder',
-                    style: TextStyle(
-                        color: Colors.blue, fontWeight: FontWeight.bold),
-                  ),
+                        if (user.uid != widget.userUid) {
+                          pushNotificationsSpecificDevice(
+                            token: widget.token,
+                            title: '${user.username} Gönderinize Yorum Yaptı',
+                            body:
+                                'Yorum İçeriği : ${commentEditingController.text}',
+                          );
+                          FireStoreMethods().notificationsCollection(
+                            widget.userUid,
+                            user.username,
+                            commentEditingController.text,
+                            user.profImage,
+                            DateTime.now(),
+                          );
+                        } else {
+                          null;
+                        }
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 8, horizontal: 8),
+                        child: const Text(
+                          'Gönder',
+                          style: TextStyle(
+                              color: Colors.blue, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          ),
         ),
       ),
     );

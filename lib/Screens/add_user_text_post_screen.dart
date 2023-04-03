@@ -19,7 +19,7 @@ class AddUserTextPostScreen extends StatefulWidget {
 class _AddUserTextPostScreenState extends State<AddUserTextPostScreen> {
   RewardedAd? _rewardedAd;
   int _rewardedAdScore = 0;
-  BannerAd? _banner;
+
   bool isLoading = false;
   String? selectedValue;
   final TextEditingController _descriptionController = TextEditingController();
@@ -29,7 +29,6 @@ class _AddUserTextPostScreenState extends State<AddUserTextPostScreen> {
     super.initState();
     //Reklamları Ekrana Yükledik
     _createRewardedAd();
-    _createBannerAd();
   }
 
 //Reklam Alanı-------------------------
@@ -62,14 +61,7 @@ class _AddUserTextPostScreenState extends State<AddUserTextPostScreen> {
     }
   }
 
-  void _createBannerAd() {
-    _banner = BannerAd(
-      size: AdSize.fullBanner,
-      adUnitId: AdmobService.bannnerAdUnitedGonderiOlusturmaEkranlariAltinda!,
-      listener: AdmobService.bannerAdListener,
-      request: const AdRequest(),
-    )..load();
-  }
+
 
 //Reklam Alanı-------------------------
   Future<String> token() async {
@@ -165,7 +157,7 @@ class _AddUserTextPostScreenState extends State<AddUserTextPostScreen> {
                   child: SizedBox(
                     width: MediaQuery.of(context).size.width * 0.52,
                     child: TextField(
-                      maxLength: 300,
+                      maxLength: 600,
                       controller: _descriptionController,
                       decoration: const InputDecoration(
                         hintText: "Düşüncelerinizi Paylaşınız...",
@@ -192,14 +184,7 @@ class _AddUserTextPostScreenState extends State<AddUserTextPostScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: _banner == null
-          ? Container()
-          : Container(
-              padding: const EdgeInsets.only(bottom: 8),
-              width: double.infinity,
-              height: 52,
-              child: AdWidget(ad: _banner!),
-            ),
+     
     );
   }
 

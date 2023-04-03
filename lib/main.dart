@@ -10,23 +10,29 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:grock/grock.dart';
 import 'package:provider/provider.dart';
 import 'package:sinavim_app/Screens/Messaging/messaging.dart';
-import 'package:sinavim_app/Screens/SearchReturn/bugun_ne_calistim.dart';
-import 'package:sinavim_app/Screens/SearchReturn/ders_notu.dart';
-import 'package:sinavim_app/Screens/SearchReturn/gelecege_notum.dart';
-import 'package:sinavim_app/Screens/SearchReturn/hayallerim.dart';
-import 'package:sinavim_app/Screens/SearchReturn/hedefim.dart';
-import 'package:sinavim_app/Screens/SearchReturn/kitap_okuyorum.dart';
-import 'package:sinavim_app/Screens/SearchReturn/motivatio_screen.dart';
-import 'package:sinavim_app/Screens/SearchReturn/ne_kadar_calistim.dart';
-import 'package:sinavim_app/Screens/SearchReturn/rekor_bende.dart';
 import 'package:sinavim_app/Screens/SearchReturn/sorular.dart';
-import 'package:sinavim_app/Screens/login_screen.dart';
-import 'package:sinavim_app/Screens/onboard/onboarding_page.dart';
-import 'package:sinavim_app/Screens/verify_email_screen.dart';
 import 'package:sinavim_app/Utils/colors.dart';
-import 'package:sinavim_app/Widgets/all_users_card.dart';
-import 'package:sinavim_app/Widgets/feedback_card.dart';
 import 'package:sinavim_app/providers/user_provider.dart';
+import 'Education Screens/Pages/Lessons Screen/english.dart';
+import 'Education Screens/Pages/Lessons Screen/fkb.dart';
+import 'Education Screens/Pages/Lessons Screen/math.dart';
+import 'Education Screens/Pages/Lessons Screen/social.dart';
+import 'Education Screens/Pages/Lessons Screen/turkish.dart';
+import 'Education Screens/Pages/questions_feed_page.dart';
+import 'Screens/SearchReturn/bugun_ne_calistim.dart';
+import 'Screens/SearchReturn/ders_notu.dart';
+import 'Screens/SearchReturn/gelecege_notum.dart';
+import 'Screens/SearchReturn/hayallerim.dart';
+import 'Screens/SearchReturn/hedefim.dart';
+import 'Screens/SearchReturn/kitap_okuyorum.dart';
+import 'Screens/SearchReturn/motivatio_screen.dart';
+import 'Screens/SearchReturn/ne_kadar_calistim.dart';
+import 'Screens/SearchReturn/rekor_bende.dart';
+import 'Screens/login_screen.dart';
+import 'Screens/onboard/onboarding_page.dart';
+import 'Screens/verify_email_screen.dart';
+import 'Widgets/all_users_card.dart';
+import 'Widgets/feedback_card.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -111,7 +117,6 @@ bool _light = true;
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
-
   @override
   State<MyApp> createState() => _MyAppState();
 }
@@ -152,6 +157,12 @@ class _MyAppState extends State<MyApp> {
           '/ne-kadar-calistim': (context) => const NeKadarCalistim(),
           '/all-users': (context) => const AllUsers(),
           '/feedback-card': (context) => const FeedbackPage(),
+          '/math': (context) => const MathScreen(),
+          '/turkish': (context) => const TurkishScreen(),
+          '/social': (context) => const SocialScreen(),
+          '/fkb': (context) => const FKBhScreen(),
+          '/english': (context) => const EnglishScreen(),
+          '/all-questions': (context) => const QuestionFeedPage(),
         },
         navigatorKey: Grock.navigationKey,
         scaffoldMessengerKey: Grock.scaffoldMessengerKey,
@@ -182,7 +193,7 @@ class _MyAppState extends State<MyApp> {
               );
             }
             return OnboardingPage(
-              onTap: () => Navigator.pushReplacement(
+              onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => const LoginScreen(),

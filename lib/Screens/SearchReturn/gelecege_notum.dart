@@ -1,10 +1,9 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:sinavim_app/Widgets/post_card.dart';
 import 'package:sinavim_app/Widgets/post_text_card.dart';
-import 'package:sinavim_app/services/add_mob_service.dart';
 
 class GelecegeNotum extends StatefulWidget {
   const GelecegeNotum({super.key});
@@ -14,26 +13,14 @@ class GelecegeNotum extends StatefulWidget {
 }
 
 class _GelecegeNotumState extends State<GelecegeNotum> {
-  final ScrollController scrollController = ScrollController();
 
-  BannerAd? _inlineAd;
+
 
   @override
   void initState() {
     super.initState();
-    //Reklamı Çağırdık
-    _createInlineAd();
   }
 
-// Reklam Alanı ----------------
-  void _createInlineAd() {
-    _inlineAd = BannerAd(
-      size: AdSize.fullBanner,
-      adUnitId: AdmobService.inlineAdUnitedIdtags!,
-      listener: AdmobService.bannerAdListener,
-      request: const AdRequest(),
-    )..load();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,39 +51,16 @@ class _GelecegeNotumState extends State<GelecegeNotum> {
             );
           }
           return ListView.builder(
-            controller: scrollController,
-            shrinkWrap: true,
+
             itemCount: snapshot.data!.docs.length,
             itemBuilder: (context, index) {
-              if (index % 4 == 1) {
-                return Column(
-                  children: [
-                    _inlineAd == null
-                        ? Container()
-                        : Container(
-                            alignment: Alignment.center,
-                            width: _inlineAd?.size.width.toDouble(),
-                            height: _inlineAd?.size.height.toDouble(),
-                            child: AdWidget(ad: _inlineAd!),
-                          ),
-                    snapshot.data!.docs[index].data()["postUrl"] != ""
-                        ? PostCard(
-                            snap: snapshot.data!.docs[index].data(),
-                          )
-                        : PostCardText(
-                            snap: snapshot.data!.docs[index].data(),
-                          ),
-                  ],
-                );
-              } else {
-                return snapshot.data!.docs[index].data()["postUrl"] != ""
-                    ? PostCard(
-                        snap: snapshot.data!.docs[index].data(),
-                      )
-                    : PostCardText(
-                        snap: snapshot.data!.docs[index].data(),
-                      );
-              }
+              return snapshot.data!.docs[index].data()["postUrl"] != ""
+                  ? PostCard(
+                      snap: snapshot.data!.docs[index].data(),
+                    )
+                  : PostCardText(
+                      snap: snapshot.data!.docs[index].data(),
+                    );
             },
           );
         },

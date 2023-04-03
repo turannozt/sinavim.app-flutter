@@ -28,7 +28,9 @@ class _SearchScreenState extends State<SearchScreen> {
         title: Form(
           child: TextFormField(
             controller: searchController,
-            decoration: const InputDecoration(labelText: 'Kullanıcı Ara ...'),
+            decoration: const InputDecoration(
+              labelText: 'Kullanıcı Ara ...',
+            ),
             onFieldSubmitted: (String _) {
               setState(() {
                 isShowUsers = true;
@@ -40,14 +42,14 @@ class _SearchScreenState extends State<SearchScreen> {
       ),
       body: user.engelkontrol == "false"
           ? isShowUsers
-              ? FutureBuilder(
-                  future: FirebaseFirestore.instance
+              ? StreamBuilder(
+                  stream: FirebaseFirestore.instance
                       .collection('users')
                       .where(
                         'username',
                         isGreaterThanOrEqualTo: searchController.text,
                       )
-                      .get(),
+                      .snapshots(),
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) {
                       return const Center(

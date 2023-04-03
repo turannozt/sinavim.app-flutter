@@ -27,7 +27,6 @@ class AddPostScreen extends StatefulWidget {
 class _AddPostScreenState extends State<AddPostScreen> {
   RewardedAd? _rewardedAd;
   int _rewardedAdScore = 0;
-  BannerAd? _banner;
   Uint8List? _file;
   bool isLoading = false;
   String? selectedValue;
@@ -102,7 +101,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
     super.initState();
     //Reklamları Ekrana Yükledik
     _createRewardedAd();
-    _createBannerAd();
+
   }
 
   //Reklam Alanı-------------------------
@@ -136,14 +135,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
     }
   }
 
-  void _createBannerAd() {
-    _banner = BannerAd(
-      size: AdSize.fullBanner,
-      adUnitId: AdmobService.bannnerAdUnitedGonderiOlusturmaEkranlariAltinda!,
-      listener: AdmobService.bannerAdListener,
-      request: const AdRequest(),
-    )..load();
-  }
+
 
 //Reklam Alanı-------------------------
   Future<String> token() async {
@@ -250,7 +242,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.3,
                   child: TextField(
-                    maxLength: 300,
+                    maxLength: 600,
                     controller: _descriptionController,
                     decoration: const InputDecoration(
                         hintText: "Metin Giriniz...", border: InputBorder.none),
@@ -288,14 +280,6 @@ class _AddPostScreenState extends State<AddPostScreen> {
             ),
           ],
         ),
-        bottomNavigationBar: _banner == null
-            ? Container()
-            : Container(
-                padding: const EdgeInsets.only(bottom: 8),
-                width: double.infinity,
-                height: 52,
-                child: AdWidget(ad: _banner!),
-              ),
       );
     }
   }

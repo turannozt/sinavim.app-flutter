@@ -26,6 +26,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isLoading = false;
+
   @override
   void dispose() {
     super.dispose();
@@ -111,6 +112,30 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  goster() {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text(
+          'Bilgilendirme !',
+          style: GoogleFonts.sourceSansPro(
+              fontSize: 18, fontWeight: FontWeight.w700),
+        ),
+        content: Text(
+          'Dilerseniz Misafir Hesabı İle Uygulamaya Giriş Yapıp İnceleyebilirsiniz. Kayıt Olmak İçin "Kayıt Ol" Butonuna Tıklayınız!',
+          style: GoogleFonts.sourceSansPro(fontSize: 16),
+        ),
+      ),
+    );
+    _passwordController.text = "misafir123";
+    _emailController.text = "misafir.kullanici384@gmail.com";
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -125,8 +150,19 @@ class _LoginScreenState extends State<LoginScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
+                        TextButton.icon(
+                          icon: const Icon(Icons.warning),
+                          onPressed: goster,
+                          label: Text(
+                            'Bilgilendirme',
+                            style: GoogleFonts.openSans(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
                         Text(
                           'Sıkça Sorulan Sorular',
                           style: GoogleFonts.openSans(
@@ -143,12 +179,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       ],
                     ),
                     //Flexible(flex: 1, child: Container()),
-                    const SizedBox(height: 40),
+                    const SizedBox(height: 15),
                     Center(
                       child: SvgPicture.asset(
                         'assets/images/sinavim.svg',
                         color: const Color(0xffd94555),
-                        height: 55,
+                        height: 48,
                       ),
                     ),
                     Center(
@@ -156,10 +192,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         fit: BoxFit.contain,
                         'assets/images/Thesis-pana.png',
                         width: MediaQuery.of(context).size.width,
-                        height: 200,
+                        height: 180,
                       ),
                     ),
-                    const SizedBox(height: 20),
+
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -167,9 +203,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         Text(
                           'Giriş Yap',
                           style: GoogleFonts.sourceSansPro(
-                              fontSize: 28,
-                              fontWeight: FontWeight.w600,
-                              wordSpacing: 1),
+                            fontSize: 28,
+                            fontWeight: FontWeight.w600,
+                            wordSpacing: 1,
+                          ),
                         ),
                         const SizedBox(height: 5),
                         Text(
@@ -213,8 +250,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             child: Text(
                               'Şifremi Unuttum',
                               style: GoogleFonts.sourceSansPro(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 15,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 18,
                               ),
                             ),
                           ),
@@ -252,9 +289,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     const SizedBox(
-                      height: 70,
+                      height: 10,
                     ),
-                    // Flexible(flex: 2, child: Container()),
+
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -285,6 +322,19 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                       ],
+                    ),
+                    Center(
+                      child: TextButton.icon(
+                        icon: const Icon(Icons.info),
+                        onPressed: goster,
+                        label: Text(
+                          'Misafir Hesabını Getir.',
+                          style: GoogleFonts.openSans(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
                     ),
                   ],
                 ),

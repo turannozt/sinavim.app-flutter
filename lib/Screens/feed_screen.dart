@@ -1,15 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 import 'package:sinavim_app/Resources/firestore_methods.dart';
+import 'package:sinavim_app/Screens/Drawer/navigation_drawer.dart';
 import 'package:sinavim_app/Screens/add_post_screen.dart';
 import 'package:sinavim_app/Screens/add_user_text_post_screen.dart';
 import 'package:sinavim_app/Screens/notifications_screen.dart';
@@ -19,7 +18,6 @@ import 'package:sinavim_app/Widgets/post_card.dart';
 import 'package:sinavim_app/Widgets/post_text_card.dart';
 import 'package:sinavim_app/Widgets/saved_posts_card.dart';
 import 'package:sinavim_app/providers/user_provider.dart';
-import 'package:sinavim_app/services/add_mob_service.dart';
 import 'package:sinavim_app/services/firebase_service.dart';
 import 'package:sinavim_app/models/user.dart' as model;
 
@@ -33,9 +31,9 @@ class FeedScreen extends StatefulWidget {
 }
 
 class _FeedScreenState extends State<FeedScreen> {
-  BannerAd? _inlineAd;
+  bool isLoading = false;
   bool rmIcons = false;
-  RewardedAd? _rewardedAd;
+  final TextEditingController controller = TextEditingController();
   Future<void> _handleRefresh() async {
     return await Future.delayed(
       const Duration(seconds: 2),
@@ -73,49 +71,10 @@ class _FeedScreenState extends State<FeedScreen> {
   void initState() {
     super.initState();
     _service.connectNotification();
-    //Reklamı Çağırdık
-    _createInlineAd();
     tokenUpdate();
   }
 
-  void _createRewardedAd() {
-    RewardedAd.load(
-      adUnitId: AdmobService.rewardedAdUnitedIdOdulluSkor!,
-      request: const AdRequest(),
-      rewardedAdLoadCallback: RewardedAdLoadCallback(
-        onAdLoaded: (ad) => setState(() => _rewardedAd = ad),
-        onAdFailedToLoad: ((error) => setState(() => _rewardedAd = null)),
-      ),
-    );
-  }
-
-  void _showRewardedAd() {
-    if (_rewardedAd != null) {
-      _rewardedAd!.fullScreenContentCallback = FullScreenContentCallback(
-        onAdDismissedFullScreenContent: (ad) {
-          ad.dispose();
-          _createRewardedAd();
-        },
-        onAdFailedToShowFullScreenContent: (ad, error) {
-          ad.dispose();
-          _createRewardedAd();
-        },
-      );
-      _rewardedAd!.show(
-        onUserEarnedReward: (ad, reward) => setState(() {}),
-      );
-    }
-  }
-
-// Reklam Alanı ----------------
-  void _createInlineAd() {
-    _inlineAd = BannerAd(
-      size: AdSize.fullBanner,
-      adUnitId: AdmobService.inlineAdUnitedFeedScreenGonderileri!,
-      listener: AdmobService.bannerAdListener,
-      request: const AdRequest(),
-    )..load();
-  }
+  Future fetch() async {}
 
   void tokenUpdate() async {
     FireStoreMethods().tokenUpdate(
@@ -128,43 +87,35 @@ class _FeedScreenState extends State<FeedScreen> {
   Widget build(BuildContext context) {
     final model.User user = Provider.of<UserProvider>(context).getUser;
     return Scaffold(
+      drawer: const NavigationDrawerWidget(),
       appBar: AppBar(
+        elevation: 0,
+        centerTitle: false,
+        title: const AnimationTextHeadFeed(title: "SINAVIM"),
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const NotificationScreen(),
-                ),
-              );
-            },
-            icon: const Icon(
-              Icons.notifications_active,
-              size: 25,
-            ),
-          ),
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
+              Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => SavedPosts(
                     uid: FirebaseAuth.instance.currentUser!.uid,
                   ),
                 ),
               );
-              _showRewardedAd();
             },
-            icon: const Icon(
-              CupertinoIcons.bookmark_solid,
-              size: 22,
-            ),
+            icon: const Icon(Icons.bookmark),
+          ),
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const NotificationScreen(),
+                ),
+              );
+            },
+            icon: const Icon(Icons.notifications),
           ),
         ],
-        elevation: 0,
-        centerTitle: false,
-        title: const AnimationTextHeadFeed(),
       ),
       body: Column(
         children: [
@@ -201,121 +152,111 @@ class _FeedScreenState extends State<FeedScreen> {
                         color: Colors.red,
                         onRefresh: _handleRefresh,
                         child: ListView.builder(
-                          itemCount: snapshot.data!.docs.length,
+                          shrinkWrap: true,
+                          itemCount: snapshot.data!.docs.length + 1,
                           itemBuilder: (ctx, index) {
-                            if (index % 4 == 1) {
-                              return Column(
-                                children: [
-                                  _inlineAd == null
-                                      ? Container()
-                                      : Container(
-                                          alignment: Alignment.center,
-                                          width:
-                                              _inlineAd?.size.width.toDouble(),
-                                          height:
-                                              _inlineAd?.size.height.toDouble(),
-                                          child: AdWidget(ad: _inlineAd!),
-                                        ),
-                                  snapshot.data!.docs[index]
-                                              .data()["postUrl"] !=
-                                          ""
-                                      ? PostCard(
-                                          snap:
-                                              snapshot.data!.docs[index].data(),
-                                        )
-                                      : PostCardText(
-                                          snap:
-                                              snapshot.data!.docs[index].data(),
-                                        ),
-                                ],
-                              );
-                            } else {
-                              return snapshot.data!.docs[index]
-                                          .data()["postUrl"] !=
-                                      ""
-                                  ? PostCard(
-                                      snap: snapshot.data!.docs[index].data(),
-                                    )
-                                  : PostCardText(
-                                      snap: snapshot.data!.docs[index].data(),
-                                    );
-                            }
+                            return snapshot.data!.docs[index]
+                                        .data()["postUrl"] !=
+                                    ""
+                                ? PostCard(
+                                    snap: snapshot.data!.docs[index].data(),
+                                  )
+                                : PostCardText(
+                                    snap: snapshot.data!.docs[index].data(),
+                                  );
                           },
                         ),
                       );
                     },
                   )
-                : Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset(
-                        'assets/images/Oh no-amico.png',
-                        width: double.infinity,
-                        height: 300,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          '${user.username} Hesabınız Kurallara Uymadığınız Geçici Süreliğine Engellendi. Engel Sebebini Öğrenmek İçin İletişime Geçebilirsiniz.',
-                          style: GoogleFonts.openSans(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w700,
-                            wordSpacing: 1,
-                            letterSpacing: 1,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                      FollowButtonCard(
-                        title: "İletişime Geç",
-                        onPressed: () =>
-                            Navigator.pushNamed(context, '/feedback-card'),
-                      ),
-                    ],
-                  ),
+                : EngelSayfasi(user: user),
           ),
         ],
       ),
       floatingActionButton: user.engelkontrol == "false"
-          ? SpeedDial(
-              backgroundColor: const Color(0xffd94555),
-              icon: Icons.add,
-              iconTheme: const IconThemeData(color: Colors.white),
-              activeIcon: Icons.close,
-              spacing: 30,
-              childPadding: const EdgeInsets.all(5),
-              buttonSize: const Size.fromRadius(28),
-              spaceBetweenChildren: 4,
-              childrenButtonSize: const Size.fromRadius(28),
-              visible: true,
-              direction: SpeedDialDirection.up,
-              useRotationAnimation: true,
-              elevation: 0.1,
-              animationCurve: Curves.elasticInOut,
-              isOpenOnStart: false,
-              animationDuration: const Duration(milliseconds: 300),
-              children: [
-                SpeedDialChild(
-                  child:
-                      !rmIcons ? const Icon(Icons.add_a_photo_outlined) : null,
-                  backgroundColor: const Color(0xff801818),
-                  foregroundColor: Colors.white,
-                  onTap: imagePost,
-                  label: 'Gönderi Oluştur',
-                  labelStyle: const TextStyle(fontWeight: FontWeight.w600),
-                ),
-                SpeedDialChild(
-                  child: !rmIcons ? const Icon(Icons.edit_note_sharp) : null,
-                  backgroundColor: const Color(0xff801818),
-                  foregroundColor: Colors.white,
-                  onTap: textPost,
-                  label: 'Düşüncelerini Paylaş',
-                  labelStyle: const TextStyle(fontWeight: FontWeight.w600),
-                ),
-              ],
-            )
+          ? user.uid == "OpcgCbxGIjZyHYt0MVn71c505E42"
+              ? Container()
+              : SpeedDial(
+                  backgroundColor: const Color(0xffd94555),
+                  icon: Icons.add,
+                  iconTheme: const IconThemeData(color: Colors.white),
+                  activeIcon: Icons.close,
+                  spacing: 30,
+                  childPadding: const EdgeInsets.all(5),
+                  buttonSize: const Size.fromRadius(28),
+                  spaceBetweenChildren: 4,
+                  childrenButtonSize: const Size.fromRadius(28),
+                  visible: true,
+                  direction: SpeedDialDirection.up,
+                  useRotationAnimation: true,
+                  elevation: 0.1,
+                  animationCurve: Curves.elasticInOut,
+                  isOpenOnStart: false,
+                  animationDuration: const Duration(milliseconds: 300),
+                  children: [
+                    SpeedDialChild(
+                      child: !rmIcons
+                          ? const Icon(Icons.add_a_photo_outlined)
+                          : null,
+                      backgroundColor: const Color(0xff801818),
+                      foregroundColor: Colors.white,
+                      onTap: imagePost,
+                      label: 'Gönderi Oluştur',
+                      labelStyle: const TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                    SpeedDialChild(
+                      child:
+                          !rmIcons ? const Icon(Icons.edit_note_sharp) : null,
+                      backgroundColor: const Color(0xff801818),
+                      foregroundColor: Colors.white,
+                      onTap: textPost,
+                      label: 'Düşüncelerini Paylaş',
+                      labelStyle: const TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                  ],
+                )
           : Container(),
+    );
+  }
+}
+
+class EngelSayfasi extends StatelessWidget {
+  const EngelSayfasi({
+    Key? key,
+    required this.user,
+  }) : super(key: key);
+
+  final model.User user;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Image.asset(
+          'assets/images/Oh no-amico.png',
+          width: double.infinity,
+          height: 300,
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            '${user.username} Hesabınız Kurallara Uymadığınız Geçici Süreliğine Engellendi. Engel Sebebini Öğrenmek İçin İletişime Geçebilirsiniz.',
+            style: GoogleFonts.openSans(
+              fontSize: 18,
+              fontWeight: FontWeight.w700,
+              wordSpacing: 1,
+              letterSpacing: 1,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
+        FollowButtonCard(
+          title: "İletişime Geç",
+          onPressed: () => Navigator.pushNamed(context, '/feedback-card'),
+        ),
+      ],
     );
   }
 }

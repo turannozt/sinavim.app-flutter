@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:sinavim_app/Resources/firestore_methods.dart';
 import 'package:sinavim_app/Screens/Messaging/constant.dart';
@@ -36,7 +35,6 @@ class _PostCardState extends State<PostCard> {
   int commentLen = 0;
   bool isLikeAnimating = false;
   RewardedAd? _rewardedAd;
-
   @override
   void initState() {
     super.initState();
@@ -292,7 +290,13 @@ class _PostCardState extends State<PostCard> {
                       widget.snap['uid'] ==
                           "8qv0YXkXVnYjhudfCch3fx1VaGC2" || //Asuman
                       widget.snap['uid'] ==
-                          "FXRLWXHsGbOeuhJmTxMnscuUFtv1" //sınavım
+                          "FXRLWXHsGbOeuhJmTxMnscuUFtv1" || //sınavım
+                      widget.snap['uid'] ==
+                          "QBaTtUbO1Bc4Qd9CsX7k21R0fS13" || //Ayşegül
+                      widget.snap['uid'] ==
+                          "bB0OYUKpuQhPw8BNOQWIhoiziE12" || //nimet
+                      widget.snap['uid'] ==
+                          "DXvNmVUyHigemLYRQtx5JZq4SCq2" //bilimsel çocuk
                   ? const CircleAvatar(
                       backgroundImage: AssetImage('assets/images/crown.png'),
                       backgroundColor: Colors.transparent,
@@ -313,7 +317,6 @@ class _PostCardState extends State<PostCard> {
                       ||
                       user.uid == "QRKSSDFMyESeukqgdlNYkb5guHt2" // Burak
                       ||
-                      user.uid == "qbfFV5XOQaY6VIuuOAxz1Mfn7rs2" || //Leyla
                       user.uid == "FXRLWXHsGbOeuhJmTxMnscuUFtv1" //sınavım
                   ? IconButton(
                       onPressed: () {
@@ -382,7 +385,7 @@ class _PostCardState extends State<PostCard> {
             ),
           ),
           child: SizedBox(
-            height: MediaQuery.of(context).size.height * 0.33,
+            height: MediaQuery.of(context).size.height * 0.50,
             width: double.infinity,
             child: Image.network(
               widget.snap['postUrl'].toString(),
@@ -393,67 +396,85 @@ class _PostCardState extends State<PostCard> {
         // LIKE, COMMENT SECTION OF THE POST
         Row(
           children: <Widget>[
-            LikeAnimation(
-              isAnimating: isLiked,
-              smallLike: true,
-              child: IconButton(
-                  icon: isLiked
-                      ? const Icon(
-                          Icons.favorite,
-                          color: Colors.pink,
-                        )
-                      : const Icon(
-                          Icons.favorite_border,
-                        ),
-                  onPressed: () {
-                    FireStoreMethods().likePost(
-                      widget.snap['postId'].toString(),
-                      user.uid,
-                      widget.snap['likes'],
-                    );
-                    if (widget.snap['uid'] != user.uid) {
-                      pushNotificationsSpecificDevice(
-                        token: widget.snap['token'],
-                        title: 'Yeni Bir Beğeni !',
-                        body: '${user.username} Gönderinizi Beğendi',
+            user.uid == "OpcgCbxGIjZyHYt0MVn71c505E42"
+                ? IconButton(
+                    icon: const Icon(Icons.favorite_outline),
+                    onPressed: () {
+                      Fluttertoast.showToast(
+                        msg: "Misafir hesabındasınız. Lütfen hesap oluşturun !",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: const Color(0xffd94555),
+                        textColor: Colors.white,
+                        fontSize: 14,
                       );
-                      FireStoreMethods().notificationsCollection(
-                        widget.snap['uid'],
-                        user.username,
-                        'Gönderinizi Beğendi',
-                        user.profImage,
-                        DateTime.now(),
-                      );
-                    } else {
-                      null;
-                    }
-                  }),
-            ),
-            IconButton(
-                icon: const Icon(
-                  Icons.comment_outlined,
-                ),
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => CommentsScreen(
-                        userUid: widget.snap['uid'].toString(),
-                        token: widget.snap['token'].toString(),
-                        postId: widget.snap['postId'].toString(),
-                      ),
+                    },
+                  )
+                : LikeAnimation(
+                    isAnimating: isLiked,
+                    smallLike: true,
+                    child: IconButton(
+                      icon: isLiked
+                          ? const Icon(
+                              Icons.favorite,
+                              color: Colors.pink,
+                            )
+                          : const Icon(
+                              Icons.favorite_border,
+                            ),
+                      onPressed: () {
+                        FireStoreMethods().likePost(
+                          widget.snap['postId'].toString(),
+                          user.uid,
+                          widget.snap['likes'],
+                        );
+                        if (widget.snap['uid'] != user.uid) {
+                          pushNotificationsSpecificDevice(
+                            token: widget.snap['token'],
+                            title: 'Yeni Bir Beğeni !',
+                            body: '${user.username} Gönderinizi Beğendi',
+                          );
+                          FireStoreMethods().notificationsCollection(
+                            widget.snap['uid'],
+                            user.username,
+                            'Gönderinizi Beğendi',
+                            user.profImage,
+                            DateTime.now(),
+                          );
+                        } else {
+                          null;
+                        }
+                      },
                     ),
-                  );
-                  _showRewardedAd();
-                }),
+                  ),
+            IconButton(
+              icon: const Icon(
+                Icons.comment_outlined,
+              ),
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => CommentsScreen(
+                      userUid: widget.snap['uid'].toString(),
+                      token: widget.snap['token'].toString(),
+                      postId: widget.snap['postId'].toString(),
+                    ),
+                  ),
+                );
+                _showRewardedAd();
+              },
+            ),
             Expanded(child: Container()),
             Row(
               children: [
                 user.uid == widget.snap['uid']
                     ? Container()
                     : IconButton(
-                        icon: const Image(
-                          image: AssetImage('assets/images/stop.png'),
-                        ),
+                        icon: user.uid == "OpcgCbxGIjZyHYt0MVn71c505E42"
+                            ? Container()
+                            : Icon(Icons.back_hand_rounded,
+                                color: Colors.green[700]),
                         iconSize: 25,
                         onPressed: () {
                           _showChoiseDialog();
@@ -461,49 +482,52 @@ class _PostCardState extends State<PostCard> {
                       ),
               ],
             ),
-            
-            IconButton(
-                onPressed: () {
-                  FireStoreMethods().unfavoriteCard(
-                    user.uid,
-                    widget.snap['postId'],
-                  );
-                  Fluttertoast.showToast(
-                    msg: "Gönderi Kayıt Edilenlerden Çıkarıldı",
-                    toastLength: Toast.LENGTH_SHORT,
-                    gravity: ToastGravity.BOTTOM,
-                    timeInSecForIosWeb: 1,
-                    backgroundColor: const Color(0xffd94555),
-                    textColor: Colors.white,
-                    fontSize: 16,
-                  );
-                },
-                icon: const Icon(Icons.bookmark_remove_outlined)),
-            IconButton(
-                onPressed: () {
-                  FireStoreMethods().favoriteCard(
-                    user.uid,
-                    widget.snap['uid'],
-                    widget.snap['postUrl'],
-                    widget.snap['description'],
-                    widget.snap['postId'],
-                    widget.snap['username'],
-                    widget.snap['likes'],
-                    widget.snap['profImage'],
-                    widget.snap['tag'],
-                    widget.snap['token'],
-                  );
-                  Fluttertoast.showToast(
-                    msg: "Gönderi Kayıt Edilenlere Eklendi",
-                    toastLength: Toast.LENGTH_SHORT,
-                    gravity: ToastGravity.BOTTOM,
-                    timeInSecForIosWeb: 1,
-                    backgroundColor: const Color(0xffd94555),
-                    textColor: Colors.white,
-                    fontSize: 16,
-                  );
-                },
-                icon: const Icon(Icons.bookmark_add_rounded)),
+            user.uid == "OpcgCbxGIjZyHYt0MVn71c505E42"
+                ? Container()
+                : IconButton(
+                    onPressed: () {
+                      FireStoreMethods().unfavoriteCard(
+                        user.uid,
+                        widget.snap['postId'],
+                      );
+                      Fluttertoast.showToast(
+                        msg: "Gönderi Kayıt Edilenlerden Çıkarıldı",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: const Color(0xffd94555),
+                        textColor: Colors.white,
+                        fontSize: 16,
+                      );
+                    },
+                    icon: const Icon(Icons.star_border)),
+            user.uid == "OpcgCbxGIjZyHYt0MVn71c505E42"
+                ? Container()
+                : IconButton(
+                    onPressed: () {
+                      FireStoreMethods().favoriteCard(
+                        user.uid,
+                        widget.snap['uid'],
+                        widget.snap['postUrl'],
+                        widget.snap['description'],
+                        widget.snap['postId'],
+                        widget.snap['username'],
+                        widget.snap['likes'],
+                        widget.snap['profImage'],
+                        widget.snap['tag'],
+                        widget.snap['token'],
+                      );
+                      Fluttertoast.showToast(
+                        msg: "Gönderi Kayıt Edilenlere Eklendi",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: const Color(0xffd94555),
+                        textColor: Colors.white,
+                        fontSize: 16,
+                      );
+                    },
+                    icon: const Icon(Icons.star)),
           ],
         ),
         //DESCRIPTION AND NUMBER OF COMMENTS
@@ -574,16 +598,21 @@ class _PostCardState extends State<PostCard> {
                     );
                     _showRewardedAd();
                   }),
-              Container(
-                padding: const EdgeInsets.symmetric(vertical: 4),
-                child: Text(
-                  DateFormat.yMMMd()
-                      .format(widget.snap['datePublished'].toDate()),
-                  style: GoogleFonts.openSans(
-                    color: secondaryColor,
-                    fontSize: 13,
-                  ),
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  widget.snap['tag'] == "null"
+                      ? Container()
+                      : Text(
+                          '#${widget.snap["tag"]}',
+                          style: GoogleFonts.openSans(
+                            fontSize: 14,
+                            color: Colors.green[800],
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 1,
+                          ),
+                        ),
+                ],
               ),
             ],
           ),

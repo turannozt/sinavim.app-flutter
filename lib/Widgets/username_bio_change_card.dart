@@ -35,10 +35,10 @@ class _UsernameBioChangeState extends State<UsernameBioChange> {
   @override
   void initState() {
     super.initState();
-
+      //Reklam Çağırdık
     _createRewardedAd();
   }
-
+// Reklam Alanı ----------------------
   void _createRewardedAd() {
     RewardedAd.load(
       adUnitId: AdmobService.rewardedAdUnitedIdOdulluSkor!,
@@ -67,7 +67,7 @@ class _UsernameBioChangeState extends State<UsernameBioChange> {
       );
     }
   }
-
+// Reklam Alanı ----------------------
   @override
   Widget build(BuildContext context) {
     final model.User user = Provider.of<UserProvider>(context).getUser;

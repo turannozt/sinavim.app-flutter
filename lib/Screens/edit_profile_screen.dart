@@ -1,4 +1,4 @@
-// ignore_for_file: no_leading_underscores_for_local_identifiers, use_build_context_synchronously, non_constant_identifier_names
+// ignore_for_file: no_leading_underscores_for_local_identifiers, use_build_context_synchronously, non_constant_identifier_names, deprecated_member_use
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,6 +8,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sinavim_app/Responsive/mobile_screen_layout.dart';
+import 'package:sinavim_app/Widgets/follow_button_widget.dart';
+import 'package:sinavim_app/Widgets/profile_card.dart';
 import 'package:sinavim_app/Widgets/social_media_card.dart';
 import 'package:sinavim_app/models/user.dart' as model;
 import 'package:provider/provider.dart';
@@ -135,49 +137,6 @@ class _EditProfilState extends State<EditProfil> {
       }
     }
 
-    Future<void> _showChoiseDialog() {
-      return showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text(
-              'Oturumunuzu Kapatmak İstediğinizden Emin misiniz ?',
-              style: GoogleFonts.sourceSansPro(
-                  fontSize: 17, fontWeight: FontWeight.w600),
-            ),
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(10),
-              ),
-            ),
-            content: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                InkWell(
-                  onTap: () {
-                    signOut();
-                    Navigator.pop(context);
-                  },
-                  child: Text(
-                    'Evet',
-                    style: GoogleFonts.sourceSansPro(
-                        fontSize: 18, fontWeight: FontWeight.w600),
-                  ),
-                ),
-                InkWell(
-                  onTap: () => Navigator.pop(context),
-                  child: Text(
-                    'Hayır',
-                    style: GoogleFonts.sourceSansPro(
-                        fontSize: 18, fontWeight: FontWeight.w600),
-                  ),
-                ),
-              ],
-            ),
-          );
-        },
-      );
-    }
 
     return Scaffold(
       appBar: AppBar(
@@ -192,12 +151,6 @@ class _EditProfilState extends State<EditProfil> {
           },
           icon: const Icon(Icons.arrow_back_ios_new),
         ),
-        actions: [
-          IconButton(
-            onPressed: _showChoiseDialog,
-            icon: const Icon(Icons.logout),
-          ),
-        ],
       ),
       resizeToAvoidBottomInset: false,
       body: ListView(
@@ -215,10 +168,31 @@ class _EditProfilState extends State<EditProfil> {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              IconButton(
-                onPressed: dataProfilePicUpdate,
-                icon: const Icon(Icons.upload_sharp),
-              ),
+              user.uid == "OpcgCbxGIjZyHYt0MVn71c505E42"
+                  ? FollowButtonCard(
+                      title: 'Çıkış Yap',
+                      onPressed: () async {
+                        signOut();
+                        Navigator.pop(context);
+                      },
+                    )
+                  : user.uid == "OpcgCbxGIjZyHYt0MVn71c505E42"
+                      ? Container()
+                      : FollowButtonCard(
+                          title: 'Kaydet',
+                          onPressed: dataProfilePicUpdate,
+                        ),
+              user.uid == "OpcgCbxGIjZyHYt0MVn71c505E42"
+                  ? Text(
+                      "Misafir Hesabındasınız! Hesap Oluşturun",
+                      style: GoogleFonts.sourceSansPro(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 1,
+                        wordSpacing: 1,
+                      ),
+                    )
+                  : Container(),
               const Padding(
                 padding: EdgeInsets.only(top: 40),
                 child: AyarWidgetleri(),
@@ -262,30 +236,34 @@ class _EditProfilState extends State<EditProfil> {
                 backgroundImage: MemoryImage(_image!),
                 backgroundColor: Colors.transparent,
               )
-            : InkWell(
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => HeroWidget(profImage: user.profImage),
+            : Center(
+                child: InkWell(
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          HeroWidget(profImage: user.profImage),
+                    ),
                   ),
-                ),
-                child: Hero(
-                  tag: 'profImage',
-                  child: CircleAvatar(
-                    radius: 64,
-                    backgroundImage: NetworkImage(user.profImage),
-                    backgroundColor: Colors.transparent,
+                  child: Hero(
+                    tag: 'profImage',
+                    child: CircleAvatar(
+                      radius: 64,
+                      backgroundImage: NetworkImage(user.profImage),
+                    ),
                   ),
                 ),
               ),
-        Positioned(
-          bottom: -10,
-          left: 80,
-          child: IconButton(
-            onPressed: selectImage,
-            icon: const Icon(Icons.add_a_photo),
-          ),
-        ),
+        user.uid == "OpcgCbxGIjZyHYt0MVn71c505E42"
+            ? Container()
+            : Positioned(
+                bottom: -10,
+                left: 220,
+                child: IconButton(
+                  onPressed: selectImage,
+                  icon: const Icon(Icons.add_a_photo_sharp),
+                ),
+              ),
       ],
     );
   }
@@ -298,6 +276,26 @@ class AyarWidgetleri extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final model.User user = Provider.of<UserProvider>(context).getUser;
+
+    void signOut() async {
+      await AuthMethods().signOut();
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => const LoginScreen(),
+        ),
+      );
+      Fluttertoast.showToast(
+        msg: "Oturumunuz Kapatılıyor...",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: const Color(0xffd94555),
+        textColor: Colors.white,
+        fontSize: 14,
+      );
+    }
+
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5),
@@ -306,170 +304,104 @@ class AyarWidgetleri extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ListTile(
-            iconColor: const Color(0xffd94555),
-            leading: const Icon(
-              Icons.person,
-              size: 27,
-            ),
-            subtitle: Text(
-              'Kullanıcı Adı & Bio Günceller.',
-              style: GoogleFonts.openSans(),
-            ),
-            trailing: const Icon(
-              Icons.arrow_forward_ios_outlined,
-              size: 27,
-            ),
-            title: Text(
-              'Kullanıcı Bilgileri',
-              style: GoogleFonts.openSans(fontWeight: FontWeight.w500),
-            ),
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const UsernameBioChange(),
-              ),
-            ),
-          ),
-          const Divider(endIndent: 20, indent: 20, thickness: 2),
-          ListTile(
-            iconColor: const Color(0xffd94555),
-            leading: const Icon(
-              Icons.password_outlined,
-              size: 27,
-            ),
-            subtitle: Text(
-              'Şifrenizi Günceller.',
-              style: GoogleFonts.openSans(),
-            ),
-            trailing: const Icon(
-              Icons.arrow_forward_ios_outlined,
-              size: 27,
-            ),
-            title: Text(
-              'Şifre',
-              style: GoogleFonts.openSans(fontWeight: FontWeight.w500),
-            ),
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const ChangePassword(),
-              ),
-            ),
-          ),
-          const Divider(endIndent: 20, indent: 20, thickness: 2),
-          ListTile(
-            iconColor: const Color(0xffd94555),
-            leading: const Icon(
-              Icons.feedback,
-              size: 27,
-            ),
-            subtitle: Text(
-              'Önerilerinizi ve Şikayetlerinizi Bildirebilirsiniz.',
-              style: GoogleFonts.openSans(),
-            ),
-            trailing: const Icon(
-              Icons.arrow_forward_ios_outlined,
-              size: 27,
-            ),
-            title: Text(
-              'Geri Bildirim',
-              style: GoogleFonts.openSans(fontWeight: FontWeight.w500),
-            ),
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const FeedbackPage(),
-              ),
-            ),
-          ),
-          const Divider(endIndent: 20, indent: 20, thickness: 2),
-          ListTile(
-            iconColor: const Color(0xffd94555),
-            leading: const Icon(
-              Icons.info_rounded,
-              size: 27,
-            ),
-            subtitle: Text(
-              'Sıkça Sorulan Soruları Listeler.',
-              style: GoogleFonts.openSans(),
-            ),
-            trailing: const Icon(
-              Icons.arrow_forward_ios_outlined,
-              size: 27,
-            ),
-            title: Text(
-              'Sıkça Sorulan Sorular',
-              style: GoogleFonts.openSans(fontWeight: FontWeight.w500),
-            ),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const SSS(),
-                ),
-              );
-            },
-          ),
-          const Divider(endIndent: 20, indent: 20, thickness: 2),
-          ListTile(
-            iconColor: const Color(0xffd94555),
-            leading: const Icon(
-              Icons.screenshot,
-              size: 27,
-            ),
-            subtitle: Text(
-              'Tanıtım Sayfasını Açar',
-              style: GoogleFonts.openSans(),
-            ),
-            trailing: const Icon(
-              Icons.arrow_forward_ios_outlined,
-              size: 27,
-            ),
-            title: Text(
-              'Tanıtım Ekranı',
-              style: GoogleFonts.openSans(fontWeight: FontWeight.w500),
-            ),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => OnboardingPage(
-                    onTap: () => Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const MobileScreenLayout(),
-                        )),
+          user.uid == "OpcgCbxGIjZyHYt0MVn71c505E42"
+              ? Container()
+              : ProfileMenu(
+                  title: 'Kullanıcı Bilgileri',
+                  subtitle: 'Kullanıcı Adı & Bio Günceller.',
+                  press: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const UsernameBioChange(),
+                    ),
                   ),
+                  icon: const Icon(Icons.person),
                 ),
-              );
-            },
+          const Divider(endIndent: 20, indent: 20, thickness: 2),
+          user.uid == "OpcgCbxGIjZyHYt0MVn71c505E42"
+              ? Container()
+              : ProfileMenu(
+                  title: 'Şifre',
+                  subtitle: 'Şifrenizi Günceller.',
+                  press: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ChangePassword(),
+                    ),
+                  ),
+                  icon: const Icon(Icons.password),
+                ),
+          const Divider(endIndent: 20, indent: 20, thickness: 2),
+          user.uid == "OpcgCbxGIjZyHYt0MVn71c505E42"
+              ? Container()
+              : ProfileMenu(
+                  title: 'Geri Bildirim',
+                  subtitle:
+                      'Önerilerinizi ve Şikayetlerinizi Bildirebilirsiniz.',
+                  press: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const FeedbackPage(),
+                    ),
+                  ),
+                  icon: const Icon(Icons.feedback),
+                ),
+          const Divider(endIndent: 20, indent: 20, thickness: 2),
+          ProfileMenu(
+            title: 'Sıkça Sorulan Sorular',
+            subtitle: 'Sıkça Sorulan Soruları Listeler.',
+            press: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const SSS(),
+              ),
+            ),
+            icon: const Icon(Icons.info),
           ),
           const Divider(endIndent: 20, indent: 20, thickness: 2),
-          ListTile(
-            iconColor: const Color(0xffd94555),
-            leading: const Icon(
+          ProfileMenu(
+            title: 'Tanıtım Ekranı',
+            subtitle: 'Tanıtım Sayfasını Açar',
+            press: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => OnboardingPage(
+                  onTap: () => Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const MobileScreenLayout(),
+                      ),
+                      (route) => false),
+                ),
+              ),
+            ),
+            icon: const Icon(Icons.screen_share_outlined),
+          ),
+          const Divider(endIndent: 20, indent: 20, thickness: 2),
+          ProfileMenu(
+            title: 'Bizi Takip Edin',
+            subtitle: 'Sosyal Medya Hesaplarımızdan Takip Edebilirsiniz.',
+            icon: const Icon(
               FontAwesomeIcons.solidIdCard,
-              size: 27,
             ),
-            subtitle: Text(
-              'Sosyal Medya Hesaplarımızdan Takip Edebilirsiniz',
-              style: GoogleFonts.openSans(),
-            ),
-            trailing: const Icon(
-              Icons.arrow_forward_ios_outlined,
-              size: 27,
-            ),
-            title: Text(
-              'Bizi Takip Edin',
-              style: GoogleFonts.openSans(fontWeight: FontWeight.w500),
-            ),
-            onTap: () => Navigator.push(
+            press: () => Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => const SocialMediaCard(),
               ),
             ),
+          ),
+          const Divider(endIndent: 20, indent: 20, thickness: 2),
+          ProfileMenu(
+            title: 'Çıkış Yap',
+            subtitle: 'Hesabınızdan Çıkış Yapar.',
+            icon: const Icon(
+              FontAwesomeIcons.signOut,
+            ),
+            press: () async {
+              signOut();
+              Navigator.pop(context);
+            },
           ),
         ],
       ),
